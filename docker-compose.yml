@@ -1,0 +1,42 @@
+name: "minis-projects"
+
+services:
+  back:
+    container_name: back
+    image: node:18-alpine
+    working_dir: /app
+    ports:
+      - "4000:3000"
+    command: npm run start:docker
+    volumes:
+      - ./mini-api:/app
+    networks:
+      - mini-network
+
+  front:
+    container_name: front
+    image: node:18-alpine
+    working_dir: /app
+    command: npm run docker
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./mini-front:/app
+    networks:
+      - mini-network
+    environment:
+      BACK_URL: http://back:3000
+
+
+networks:
+  mini-network:
+    name: mini-network
+    driver: bridge
+
+#  back-prod:
+#    container_name: back-prod
+#    build:
+#      context: ./mini-api
+#      dockerfile: Dockerfile
+#    ports:
+#      - "3000:3000"

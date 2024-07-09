@@ -24,3 +24,22 @@
 - Comment fonctionne les volumes 
   - `-v` / `--volume`
   - `docker run -d --name api-dev -p 3000:3000 -v ./:/app playground-dev`
+
+- Pour voir toute la config d'un container :
+> `docker inspect [container name]`
+
+- Comment fonctionne les réseaux Docker
+
+```shell
+docker network create mini-network 
+
+docker run -it --name c1 ubuntu /bin/bash
+docker network connect mini-network c1
+
+docker run -it --network=mini-network --name c2 ubuntu /bin/bash
+docker run -it --network=mini-network --name c4 --hostname h4 ubuntu /bin/bash
+
+docker network create -d none safe-network
+docker run -it --network=safe-network --name c3 ubuntu /bin/bash
+docker network connect safe-network c1
+```
