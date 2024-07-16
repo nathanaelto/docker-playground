@@ -6,12 +6,21 @@ services:
     image: node:18-alpine
     working_dir: /app
     ports:
-      - "4000:3000"
+      - "4000:4000"
     command: npm run start:docker
     volumes:
       - ./mini-api:/app
+    environment:
+      NODE_ENV: development
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
     networks:
       - mini-network
+    depends_on:
+      - db
 
   front:
     container_name: front
@@ -25,7 +34,9 @@ services:
     networks:
       - mini-network
     environment:
-      BACK_URL: http://back:3000
+      BACK_URL: ${BACK_URL}
+    depends_on:
+      - back
 
   db:
     image: postgres:14-alpine
@@ -33,9 +44,9 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: user-name
-      POSTGRES_PASSWORD: strong-password
-      POSTGRES_DB: mini-db
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     networks:
       - mini-network
     volumes:
@@ -52,6 +63,8 @@ services:
       - "8080:8080"
     networks:
       - mini-network
+    depends_on:
+      - db
 
 
 volumes:

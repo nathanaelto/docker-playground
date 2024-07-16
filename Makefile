@@ -1,4 +1,4 @@
-.PHONY: install-front install-back install start up pull
+.PHONY: install-front install-back install start up pull db-update index
 
 install-front:
 	@echo "Install front dependencies"
@@ -17,3 +17,9 @@ up: install start
 
 pull:
 	@docker compose pull
+
+db-update:
+	@docker compose exec back npx mikro-orm schema:update --run
+
+index:
+	@docker compose exec back npm run index
